@@ -23,6 +23,7 @@ async function run() {
         const database = client.db('streetPottery');
         const productsCollection = database.collection('products');
         const usersCollection = database.collection('users');
+        const ordersCollection = database.collection('orders');
 
         // GET API
         app.get('/products', async (req, res) => {
@@ -51,6 +52,12 @@ async function run() {
             }
             res.json({ admin: isAdmin });
         })
+
+        // confirm order
+        app.post("/confirmOrder", async (req, res) => {
+            const result = await ordersCollection.insertOne(req.body);
+            res.send(result);
+        });
 
 
         // POST API Products
