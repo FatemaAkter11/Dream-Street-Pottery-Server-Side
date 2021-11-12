@@ -119,6 +119,21 @@ async function run() {
             });
             res.send(result);
         });
+
+        // update status
+        app.put("/updateStatus/:id", (req, res) => {
+            const id = req.params.id;
+            const updatedStatus = req.body.status;
+            const filter = { _id: ObjectId(id) };
+            console.log(updatedStatus);
+            ordersCollection
+                .updateOne(filter, {
+                    $set: { status: updatedStatus },
+                })
+                .then((result) => {
+                    res.send(result);
+                });
+        });
     }
     finally {
         // await client.close();
