@@ -53,19 +53,17 @@ async function run() {
         })
 
 
-        // POST API
+        // POST API Products
         app.post('/products', async (req, res) => {
-
             // create a document to insert
             const product = req.body;
-            console.log('hit the post api', product);
+            // console.log('hit the post api', product);
             const result = await productsCollection.insertOne(product);
             console.log(result);
             res.json(result)
-            // res.send('post hitted');
         });
 
-
+        // POST API Users
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
@@ -73,6 +71,7 @@ async function run() {
             res.json(result);
         });
 
+        // PUT API Products
         app.put('/users', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
@@ -82,25 +81,15 @@ async function run() {
             res.json(result);
         });
 
+        // PUT API Users/Admin
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             console.log('put', user);
-            // const requester = req.decodedEmail;
-            // if (requester) {
-            //     const requesterAccount = await usersCollection.findOne({ email: requester });
-            //     if (requesterAccount.role === 'admin') {
             const filter = { email: user.email };
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
-            // }
-            // }
-            // else {
-            //     res.status(403).json({ message: 'you do not have access to make admin' })
-            // }
-
         })
-
     }
     finally {
         // await client.close();
