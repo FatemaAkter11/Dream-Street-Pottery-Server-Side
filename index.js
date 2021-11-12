@@ -24,6 +24,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const usersCollection = database.collection('users');
         const ordersCollection = database.collection('orders');
+        const reviewCollection = database.collection('review');
 
         // GET API
         app.get('/products', async (req, res) => {
@@ -31,6 +32,14 @@ async function run() {
             const products = await cursor.toArray();
             res.send(products);
         });
+
+        //review
+        app.get('/review', async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const products = await cursor.toArray();
+            res.send(products);
+        });
+
 
         // GET Single Product
         app.get('/products/:id', async (req, res) => {
@@ -102,7 +111,16 @@ async function run() {
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
-        })
+        });
+
+        //POST API user review
+        app.post('/review', async (req, res) => {
+            const message = req.body;
+            const result = await reviewCollection.insertOne(message);
+            // console.log(result);
+            res.json(result)
+        });
+
 
         // DELETE API
         app.delete('/products/:id', async (req, res) => {
