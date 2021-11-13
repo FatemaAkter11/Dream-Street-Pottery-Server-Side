@@ -26,14 +26,14 @@ async function run() {
         const ordersCollection = database.collection('orders');
         const reviewCollection = database.collection('review');
 
-        // GET API
+        // GET API Products
         app.get('/products', async (req, res) => {
             const cursor = productsCollection.find({});
             const products = await cursor.toArray();
             res.send(products);
         });
 
-        //review
+        // GET API review
         app.get('/review', async (req, res) => {
             const cursor = reviewCollection.find({});
             const products = await cursor.toArray();
@@ -44,7 +44,14 @@ async function run() {
         // GET Single Product
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
-            console.log('getting specific product', id);
+            // console.log('getting specific product', id);
+            const query = { _id: ObjectId(id) };
+            const product = await productsCollection.findOne(query);
+            res.json(product);
+        })
+        // GET Single review
+        app.get('/review/:id', async (req, res) => {
+            const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const product = await productsCollection.findOne(query);
             res.json(product);
@@ -93,6 +100,14 @@ async function run() {
             res.json(result);
         });
 
+        //POST API User Review
+        app.post('/review', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            // console.log(result);
+            res.json(result)
+        });
+
         // PUT API Products
         app.put('/users', async (req, res) => {
             const user = req.body;
@@ -111,14 +126,6 @@ async function run() {
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
-        });
-
-        //POST API user review
-        app.post('/review', async (req, res) => {
-            const message = req.body;
-            const result = await reviewCollection.insertOne(message);
-            // console.log(result);
-            res.json(result)
         });
 
 
