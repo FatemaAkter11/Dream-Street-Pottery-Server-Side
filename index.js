@@ -75,7 +75,7 @@ async function run() {
             res.send(result);
         });
 
-        // my Order
+        // get Order
         app.get('/orders', async (req, res) => {
             const cursor = ordersCollection.find({});
             const orders = await cursor.toArray();
@@ -129,7 +129,7 @@ async function run() {
         });
 
 
-        // DELETE API
+        // DELETE Product API
         app.delete('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -148,6 +148,17 @@ async function run() {
             res.send(result);
 
         });
+
+        //get myOrder
+        app.get('/orders/:email', async (req, res) => {
+            const result = await ordersCollection
+                .find({ Email: req.params.email })
+                .toArray();
+            res.send(result);
+
+        });
+
+
         // delete order
         app.delete("/deleteOrder/:id", async (req, res) => {
             const result = await ordersCollection.deleteOne({
